@@ -22,7 +22,7 @@
   <p class="direction" id="direction">North</p>
 
   <script>
-    // DOM elements to display compass data
+  // DOM elements to display compass data
 const headingElement = document.getElementById("heading");
 const directionElement = document.getElementById("direction");
 
@@ -91,14 +91,30 @@ function startCompass() {
 
         // Display the heading and cardinal direction
         if (heading !== undefined && !isNaN(heading)) {
-            headingElement.textContent = `${Math.round(heading)}°`;
+            heading = Math.round(heading); // Round to the nearest integer
+            headingElement.textContent = `${heading}°`;
             directionElement.textContent = getCardinalDirection(heading);
+
+            // Trigger vibration when the heading is approximately 120 degrees
+            if (Math.abs(heading - 120) <= 2) { // Allow a small range around 120 degrees
+                triggerVibration();
+            }
         } else {
             headingElement.textContent = "N/A";
             directionElement.textContent = "Unknown";
         }
     });
 }
+
+// Function to trigger vibration
+function triggerVibration() {
+    if ('vibrate' in navigator) { // Check if Vibration API is supported
+        navigator.vibrate(200); // Vibrate for 200ms
+    } else {
+        console.warn("Vibration API is not supported on this device.");
+    }
+}
+
   </script>
 </body>
 </html>
