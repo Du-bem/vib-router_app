@@ -74,7 +74,35 @@
         var pos;
         var map, infoWindow;
         let waypoints = [];
+        const isIOS = typeof DeviceOrientationEvent !== "undefined" &&
+            typeof DeviceOrientationEvent.requestPermission === "function";
+        let personDegree = 0;
         const x = document.getElementById("demo");
+
+        function startCompass() {
+            if (isIOS) {
+                DeviceOrientationEvent.requestPermission()
+                    .then(response => {
+                        if (response === "granted") {
+                            window.addEventListener("deviceorientation", handleOrientation);
+                        } else {
+                            alert("Permission denied.");
+                        }
+                    })
+                    .catch(() => alert("DeviceOrientation not supported or denied."));
+            } else {
+                window.addEventListener("deviceorientationabsolute", handleOrientation);
+            }
+        }
+
+        function handleOrientation(event) {
+            const compass = event.webkitCompassHeading || (360 - event.alpha);
+            if (compass !== null && compass !== undefined) {
+                personDegree = Math.round(compass);
+            }
+        }
+
+        startCompass();
 
         async function updateUserLocation() {
             return new Promise((resolve, reject) => {
@@ -335,7 +363,7 @@
 
         document.getElementById('person_submit').addEventListener('click', async function () {
             setInterval(async function () {
-                x.innerHTML += "Interval check called<br>";
+                x.innerHTML += `Interval check called (${personDegree} degrees)<br>";
                 const pos = await updateUserLocation();
 
                 if (pos) {
