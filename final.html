@@ -199,11 +199,24 @@
                 },
                 function (response, status) {
                     if (status === 'OK') {
-                        directionsRenderer.setDirections(response);
+                        // directionsRenderer.setDirections(response);
                         for (const [key, value] of Object.entries(response["routes"][0]["overview_path"])) {
                             // console.log("{ lat: " + value.lat() + ", lng: " + value.lng() + "}");
                             waypoints.push({ lat: value.lat(), lng: value.lng() });
                         }
+
+                        const overviewPath = response["routes"][0]["overview_path"];
+
+                        const routePolyline = new google.maps.Polyline({
+                            path: overviewPath,
+                            geodesic: true,
+                            strokeColor: '#FF0000',
+                            strokeOpacity: 1.0,
+                            strokeWeight: 4
+                        });
+
+                        routePolyline.setMap(map);
+
                     } else {
                         window.alert('Directions request failed due to ' + status);
                     }
@@ -253,7 +266,6 @@
             console.log(`Current Location: Lat ${currentPosition.lat}, Lng ${currentPosition.lng}`);
             console.log(`Next direction: ${result.direction}`);
             console.log(waypoints);
-            x.innerHTML += `Go ${result.direction}<br>`;
             return result.direction;
         }
 
@@ -263,15 +275,14 @@
             if (isRunning) return; // prevent duplicate loops
             isRunning = true;
 
-            alert("call the function");
+            x.innerHTML += "call the function<br>";
 
-            x.innerHTML += `Interval check called (${personDegree} degrees)<br>`;
-            const pos = await updateUserLocation();
+            pos = await updateUserLocation();
+            originMarker.setPosition(pos);
 
-            alert("after the position");
+            x.innerHTML += "after the position<br>";
 
             if (pos) {
-                x.innerHTML += "Retrieved the location<br>";
                 getDirectionsForPerson(pos);
             } else {
                 alert("Could not get location");
@@ -280,6 +291,7 @@
             // Schedule the next execution
             setTimeout(() => {
                 isRunning = false; // allow next run
+                x.innerHTML = "";
                 intervalFunction();
             }, 5000);
         }
