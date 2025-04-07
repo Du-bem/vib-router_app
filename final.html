@@ -286,16 +286,18 @@
             return result.direction;
         }
 
-        document.getElementById('person_submit').addEventListener('click', function () {
-            // Test the function by passing in the person's current location (D)
-            // let position = document.getElementById("person_position").value.split(",")
-            // let personLocation = { lat: parseFloat(position[0]), lng: parseFloat(position[1]) };
-            // console.log(personLocation);
-            if (updateUserLocation()) {
-                console.log(pos);
+        document.getElementById('person_submit').addEventListener('click', async function () {
+            const pos = await updateUserLocation(); // wait until we get the coordinates
+
+            if (pos) {
+                console.log(pos); // guaranteed to be defined here
                 getDirectionsForPerson(pos);
+            } else {
+                alert("Could not get location");
+                // optionally show a message to the user or handle fallback
             }
         });
+
     </script>
 
     <script async defer
