@@ -79,6 +79,8 @@
             typeof DeviceOrientationEvent.requestPermission === "function";
         let personDegree = 0;
         let ding = new Audio('sound.mp3');
+        let routePolyline = null;
+        let routeMarkers = [];
         const x = document.getElementById("demo");
 
         function isPlaying(audio) {
@@ -205,22 +207,69 @@
                             waypoints.push({ lat: value.lat(), lng: value.lng() });
                         }
 
-                        const overviewPath = response["routes"][0]["overview_path"];
+                        // const overviewPath = response["routes"][0]["overview_path"];
 
-                        const routePolyline = new google.maps.Polyline({
-                            path: overviewPath,
-                            geodesic: true,
-                            strokeColor: '#FF0000',
-                            strokeOpacity: 1.0,
-                            strokeWeight: 4
-                        });
+                        // const routePolyline = new google.maps.Polyline({
+                        //     path: overviewPath,
+                        //     geodesic: true,
+                        //     strokeColor: '#FF0000',
+                        //     strokeOpacity: 1.0,
+                        //     strokeWeight: 4
+                        // });
 
-                        routePolyline.setMap(map);
+                        // routePolyline.setMap(map);
 
                     } else {
                         window.alert('Directions request failed due to ' + status);
                     }
                 });
+        }
+
+        function drawRouteWithMarkers(pathPoints) {
+            // Clear existing polyline
+            if (routePolyline) {
+                routePolyline.setMap(null);
+            }
+
+            // Clear existing markers
+            routeMarkers.forEach(marker => marker.setMap(null));
+            routeMarkers = [];
+
+            if (!pathPoints || pathPoints.length === 0) return;
+
+            // Draw new polyline
+            routePolyline = new google.maps.Polyline({
+                path: pathPoints,
+                geodesic: true,
+                strokeColor: '#007bff', // blue path
+                strokeOpacity: 1.0,
+                strokeWeight: 4
+            });
+            routePolyline.setMap(map);
+
+            // Add numbered markers
+            pathPoints.forEach((latlng, index) => {
+                const marker = new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                    label: {
+                        text: `${index + 1}`,
+                        color: '#fff',
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                    },
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 10,
+                        fillColor: '#28a745', // green fill
+                        fillOpacity: 1.0,
+                        strokeColor: '#000',
+                        strokeWeight: 1
+                    }
+                });
+
+                routeMarkers.push(marker);
+            });
         }
 
         // Function to calculate the bearing between two coordinates
@@ -253,6 +302,7 @@
                     x.innerHTML += `Reached a waypoint! (were ${waypoints.length})<br>`;
                     waypoints.splice(i, 1); // Remove the current waypoint from the array
                     x.innerHTML += `Reached a waypoint! (now ${waypoints.length})<br>`;
+                    drawRouteWithMarkers(waypoints);
                     return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? 'Next waypoint.' : 'You have reached your destination.' };
                 }
             }
