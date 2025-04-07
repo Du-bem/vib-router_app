@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phone Direction</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .direction {
+      font-size: 24px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Phone Direction</h1>
+  <p>Heading: <span id="heading">0</span>°</p>
+  <p class="direction" id="direction">North</p>
+
+  <script>
+    const headingElement = document.getElementById("heading");
+    const directionElement = document.getElementById("direction");
+
+    if ('DeviceOrientationEvent' in window) {
+      // Check if explicit permission is required (iOS devices)
+      if (typeof DeviceOrientationEvent.requestPermission === "function") {
+        const permissionButton = document.createElement("button");
+        permissionButton.textContent = "Enable Compass";
+        document.body.appendChild(permissionButton);
+
+        permissionButton.addEventListener("click", () => {
+          DeviceOrientationEvent.requestPermission()
+            .then((response) => {
+              if (response === "granted") {
+                startListening();
+                permissionButton.remove();
+              } else {
+                alert("Permission denied for accessing compass.");
+              }
+            })
+            .catch((error) => console.error("Permission error:", error));
+        });
+      } else {
+        startListening(); // For devices that don't require explicit permission
+      }
+    } else {
+      alert("DeviceOrientation API is not supported on this device.");
+    }
+
+    function startListening() {
+      window.addEventListener("deviceorientation", (event) => {
+        const alpha = event.alpha; // Heading in degrees
+        headingElement.textContent = alpha ? alpha.toFixed(2) : "N/A";
+
+        // Determine cardinal direction based on alpha value
+        let direction = "Unknown";
+        if (alpha >= 0 && alpha <= 22.5 || alpha > 337.5 && alpha <= 360) {
+          direction = "North";
+        } else if (alpha > 22.5 && alpha <= 67.5) {
+          direction = "Northeast";
+        } else if (alpha > 67.5 && alpha <= 112.5) {
+          direction = "East";
+        } else if (alpha > 112.5 && alpha <= 157.5) {
+          direction = "Southeast";
+        } else if (alpha > 157.5 && alpha <= 202.5) {
+          direction = "South";
+        } else if (alpha > 202.5 && alpha <= 247.5) {
+          direction = "Southwest";
+        } else if (alpha > 247.5 && alpha <= 292.5) {
+          direction = "West";
+        } else if (alpha > 292.5 && alpha <= 337.5) {
+          direction = "Northwest";
+        }
+
+        directionElement.textContent = direction;
+      });
+    }
+  </script>
+</body>
+</html>
