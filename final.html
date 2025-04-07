@@ -64,23 +64,18 @@
         <input type="text" id="destination_input" placeholder="Please put destination">
         <button id="submit">Go!</button>
         <br>
-        <button onclick="abcde()">Go adasd asd asdsadsadsadsad!</button>
+        <button onclick="getLocation()" id="person_submit">Vibrate</button>
+        <br>
         <p id="abc">no</p>
+
+        <p id="demo"></p>
     </div>
     <script>
-        
-
-        function abcde() {
-            if ("vibrate" in navigator) {
-                navigator.vibrate(500);
-            } else {
-                alert("Vibration API not supported on this device.");
-            }
-        };
-
+        var originMarker;
         var pos;
         var map, infoWindow;
         let waypoints = [];
+        const x = document.getElementById("demo");
 
         async function updateUserLocation() {
             return new Promise((resolve, reject) => {
@@ -96,7 +91,12 @@
                         function (error) {
                             console.error('Geolocation error:', error.message);
                             resolve(null); // or reject(error) if you want to throw
-                        }
+                        },
+                        // {
+                        //     enableHighAccuracy: true,   // Set to true only if you really need high accuracy
+                        //     timeout: 5000,               // Timeout after 5 seconds
+                        //     maximumAge: 10000            // Accept a cached position that's up to 10 seconds old
+                        // }
                     );
                 } else {
                     alert('Browser does not support Geolocation!');
@@ -105,6 +105,36 @@
             });
         }
 
+        function getLocation() {
+            setTimeout(function() {
+                originMarker.setPosition({lat: 51.09519169903859, lng: 17.020482763739455});
+            }, 2000);
+            x.innerHTML += "We are in!<br>";
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(success, error);
+            } else {
+                x.innerHTML += "Geolocation is not supported by this browser.<br>";
+            }
+        }
+
+        function error(error) {
+            x.innerHTML += "Error happened!<br>";
+
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    x.innerHTML += "User denied the request for Geolocation.<br>"
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    x.innerHTML += "Location information is unavailable.<br>"
+                    break;
+                case error.TIMEOUT:
+                    x.innerHTML += "The request to get user location timed out.<br>"
+                    break;
+                case error.UNKNOWN_ERROR:
+                    x.innerHTML += "An unknown error occurred.<br>"
+                    break;
+            }
+        }
 
         async function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
@@ -120,7 +150,7 @@
             if (pos) {
                 console.log("put center");
                 console.log(pos);
-                var originMarker = new google.maps.Marker({
+                originMarker = new google.maps.Marker({
                     position: pos,
                     map: map,
                     animation: google.maps.Animation.DROP,
@@ -269,22 +299,29 @@
             console.log(`Current Location: Lat ${currentPosition.lat}, Lng ${currentPosition.lng}`);
             console.log(`Next direction: ${result.direction}`);
             console.log(waypoints);
+            x.innerHTML += `Go ${result.direction}<br>`;
             vibrateNavigation(result.direction);
             return result.direction;
         }
-        
-        // document.getElementById('person_submit').addEventListener('click', async function () {
-        //     const pos = await updateUserLocation(); // wait until we get the coordinates
 
-        //     if (pos) {
-        //         document.getElementById("abc").innerHTML = "no";
-        //         console.log(pos);
-        //         getDirectionsForPerson(pos);
-        //     } else {
-        //         alert("Could not get location");
-        //         // optionally show a message to the user or handle fallback
-        //     }
-        // });
+        function vibrateNavigation(direction) {
+            navigator.vibrate(500);
+        }
+
+        function success(position) {
+            x.innerHTML += "Invocated success<br>";
+
+            pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            if (pos) {
+                getDirectionsForPerson(pos);
+            } else {
+                alert("Could not get location");
+            }
+        }
 
     </script>
 
