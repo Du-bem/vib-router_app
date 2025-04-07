@@ -64,7 +64,6 @@
         <input type="text" id="destination_input" placeholder="Please put destination">
         <button id="submit">Go!</button>
         <br>
-        <input type="text" id="person_position" placeholder="Please put the person coordinate">
         <button onclick="abcde()">Go adasd asd asdsadsadsadsad!</button>
         <p id="abc">no</p>
     </div>
@@ -75,10 +74,10 @@
             if ("vibrate" in navigator) {
                 navigator.vibrate(500);
             } else {
-                console.log("Vibration API not supported on this device.");
+                alert("Vibration API not supported on this device.");
             }
         };
-        
+
         var pos;
         var map, infoWindow;
         let waypoints = [];
