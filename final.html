@@ -102,11 +102,11 @@
             if (compass !== null && compass !== undefined) {
                 personDegree = Math.round(compass);
 
-                if (waypoints.length) {
+                if (waypoints.length && pos) {
                     // personDegree.
                     // document.getElementById("status").innerHTML = `Point: ${calculateBearing(pos, waypoints[0])} degrees, person ${personDegree} degrees.`;
                     // alert((abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20));
-                    document.getElementById("status").innerHTML = (abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20) ? "good" : "bad";
+                    document.getElementById("status").innerHTML = (Math.abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20) ? "good" : "bad";
                 }
             }
         }
