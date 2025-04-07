@@ -125,6 +125,7 @@
             directionsRenderer.setMap(map);
 
             if (updateUserLocation()) {
+                console.log("put center");
                 var originMarker = new google.maps.Marker({
                     position: pos,
                     map: map,
