@@ -123,9 +123,10 @@
             var directionsService = new google.maps.DirectionsService();
             var directionsRenderer = new google.maps.DirectionsRenderer();
             directionsRenderer.setMap(map);
-
+            
             if (updateUserLocation()) {
                 console.log("put center");
+                console.log(pos);
                 var originMarker = new google.maps.Marker({
                     position: pos,
                     map: map,
