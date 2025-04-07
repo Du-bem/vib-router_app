@@ -22,7 +22,7 @@ function getLocation() {
 function success(position) {
     x.innerHTML="Latitude: " + position.coords.latitude + 
     "<br>Longitude: " + position.coords.longitude +
-    "<br>Heading: " + position.coords.heading;
+    "<br>Heading: " + position.heading;
 }
 
 function error(error) {
