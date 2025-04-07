@@ -66,6 +66,7 @@
         <br>
         <input type="text" id="person_position" placeholder="Please put the person coordinate">
         <button id="person_submit">Go!</button>
+        <p id="abc">no</p>
     </div>
     <button onclick="getLocation()">Try It</button>
 
@@ -288,6 +289,7 @@
         }
 
         function vibrateNavigation(direction) {
+            document.getElementById("abc").innerHTML = "vibrating";
             navigator.vibrate(6000);
         }
 
@@ -295,6 +297,7 @@
             const pos = await updateUserLocation(); // wait until we get the coordinates
 
             if (pos) {
+                document.getElementById("abc").innerHTML = "no";
                 console.log(pos);
                 getDirectionsForPerson(pos);
             } else {
