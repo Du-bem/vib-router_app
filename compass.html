@@ -34,6 +34,7 @@
       const compass = event.webkitCompassHeading || (360 - event.alpha);
       if (compass !== null && compass !== undefined) {
         _personDegree = Math.round(compass);
+        document.write(_personDegree);
       }
     }
 
