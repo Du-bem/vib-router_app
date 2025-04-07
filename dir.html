@@ -112,7 +112,7 @@ function startCompass() {
 function triggerVibration() {
     if ('vibrate' in navigator) { // Check if Vibration API is supported
       alert("Is vibrate in navigator???");
-        navigator.vibrate(200); // Vibrate for 200ms
+      navigator.vibrate(200); // Vibrate for 200ms
     } else {
         console.warn("Vibration API is not supported on this device.");
     }
