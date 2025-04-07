@@ -66,6 +66,7 @@
         <br>
         <button onclick="getLocation()" id="person_submit">Vibrate</button>
         <br>
+        <button onclick="playSound()">Playt Sound</button>
         <p id="abc">no</p>
 
         <p id="demo"></p>
@@ -330,6 +331,11 @@
             } else {
                 alert("Could not get location");
             }
+        }
+
+        function playSound() {
+            let ding = new Audio('sound.mp3');
+            ding.play();
         }
 
     </script>
