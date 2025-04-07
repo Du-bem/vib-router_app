@@ -106,9 +106,6 @@
         }
 
         function getLocation() {
-            setTimeout(function() {
-                originMarker.setPosition({lat: 51.09519169903859, lng: 17.020482763739455});
-            }, 2000);
             x.innerHTML += "We are in!<br>";
             if (navigator.geolocation) {
                 navigator.geolocation.watchPosition(success, error);
@@ -154,7 +151,11 @@
                     position: pos,
                     map: map,
                     animation: google.maps.Animation.DROP,
-                    title: 'My current position!'
+                    title: 'My current position!',
+                    label: {
+                        text: "🧍", // Person emoji
+                        fontSize: "24px"
+                    }
                 });
                 map.setCenter(pos);
                 document.getElementById('submit').addEventListener('click', function () {
@@ -315,6 +316,7 @@
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
+            originMarker.setPosition(pos);
 
             if (pos) {
                 getDirectionsForPerson(pos);
