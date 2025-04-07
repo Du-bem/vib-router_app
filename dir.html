@@ -93,7 +93,7 @@ function startCompass() {
         if (heading !== undefined && !isNaN(heading)) {
             heading = Math.round(heading); // Round to the nearest integer
             headingElement.textContent = `${heading}°`;
-            alert("TestAlert!!!");
+            // alert("TestAlert!!!");
             directionElement.textContent = getCardinalDirection(heading);
 
             // Trigger vibration when the heading is approximately 120 degrees
