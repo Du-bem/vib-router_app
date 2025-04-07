@@ -71,6 +71,7 @@
         <p id="demo"></p>
     </div>
     <script>
+        var originMarker;
         var pos;
         var map, infoWindow;
         let waypoints = [];
@@ -105,6 +106,7 @@
         }
 
         function getLocation() {
+            originMarker.setMap(null);
             x.innerHTML += "We are in!<br>";
             if (navigator.geolocation) {
                 navigator.geolocation.watchPosition(success, error);
@@ -146,7 +148,7 @@
             if (pos) {
                 console.log("put center");
                 console.log(pos);
-                var originMarker = new google.maps.Marker({
+                originMarker = new google.maps.Marker({
                     position: pos,
                     map: map,
                     animation: google.maps.Animation.DROP,
