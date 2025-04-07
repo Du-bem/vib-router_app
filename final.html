@@ -65,7 +65,6 @@
         <button id="submit">Go!</button>
         <br>
         <button type="button" id="person_submit">Route</button>
-        <!-- <button onclick="getLocation()" id="person_submit">Vibrate</button> -->
         <br>
         <p id="status"></p>
         <br>
@@ -79,7 +78,12 @@
         const isIOS = typeof DeviceOrientationEvent !== "undefined" &&
             typeof DeviceOrientationEvent.requestPermission === "function";
         let personDegree = 0;
+        let ding = new Audio('sound.mp3');
         const x = document.getElementById("demo");
+
+        function isPlaying(audio) {
+            return !audio.paused && !audio.ended && audio.readyState > 2;
+        }
 
         function startCompass() {
             if (isIOS) {
@@ -103,15 +107,14 @@
                 personDegree = Math.round(compass);
 
                 if (waypoints.length && pos) {
-                    // personDegree.
-                    // document.getElementById("status").innerHTML = `Point: ${calculateBearing(pos, waypoints[0])} degrees, person ${personDegree} degrees.`;
-                    // alert((abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20));
-                    document.getElementById("status").innerHTML = (Math.abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20) ? "good" : "bad";
+                    let good = (Math.abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20);
+                    document.getElementById("status").innerHTML = good ? "good" : "bad";
                     document.getElementById("status").innerHTML += `<br>${calculateBearing(pos, waypoints[0])} and ${personDegree}`;
 
-                    navigator.vibrate(500);
-                    let ding = new Audio('sound.mp3');
-                    ding.play();
+                    if (isPlaying(ding)) {
+                        navigator.vibrate(1000);
+                        ding.play();
+                    }
                 }
             }
         }
@@ -145,34 +148,6 @@
                 }
             });
         }
-
-        /* function getLocation() {
-            x.innerHTML += "We are in!<br>";
-            if (navigator.geolocation) {
-                navigator.geolocation.watchPosition(success, error);
-            } else {
-                x.innerHTML += "Geolocation is not supported by this browser.<br>";
-            }
-        } */
-
-        /* function error(error) {
-            x.innerHTML += "Error happened!<br>";
-
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    x.innerHTML += "User denied the request for Geolocation.<br>"
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    x.innerHTML += "Location information is unavailable.<br>"
-                    break;
-                case error.TIMEOUT:
-                    x.innerHTML += "The request to get user location timed out.<br>"
-                    break;
-                case error.UNKNOWN_ERROR:
-                    x.innerHTML += "An unknown error occurred.<br>"
-                    break;
-            }
-        } */
 
         async function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
@@ -212,44 +187,6 @@
                 alert("Could not retrieve location. Using default coordinates maybe?");
                 // Handle fallback behavior
             }
-
-            // // Try HTML5 geolocation.
-            // if (navigator.geolocation) {
-            //     if (updateUserLocation()) {
-            //         var originMarker = new google.maps.Marker({
-            //             position: pos,
-            //             map: map,
-            //             animation: google.maps.Animation.DROP,
-            //             title: 'My current position!'
-            //         });
-            //         map.setCenter(pos);
-            //         document.getElementById('submit').addEventListener('click', function () {
-            //             console.log('ok my location');
-            //             calculateAndDisplayRoute(pos, directionsService, directionsRenderer)
-            //         });
-            //     }
-            //     // navigator.geolocation.getCurrentPosition(function (position) {
-            //     //     pos = {
-            //     //         lat: position.coords.latitude,
-            //     //         lng: position.coords.longitude
-            //     //     };
-            //     //     var originMarker = new google.maps.Marker({
-            //     //         position: pos,
-            //     //         map: map,
-            //     //         animation: google.maps.Animation.DROP,
-            //     //         title: 'My current position!'
-            //     //     });
-            //     //     map.setCenter(pos);
-            //     //     document.getElementById('submit').addEventListener('click', function () {
-            //     //         console.log('ok my location');
-            //     //         calculateAndDisplayRoute(pos, directionsService, directionsRenderer)
-            //     //     });
-            //     // }, function () {
-            //     //     console.log('current position issue');
-            //     // });
-            // } else {
-            //     alert('Browser does not support Geolocation!');
-            // }
         }
 
         function calculateAndDisplayRoute(origin, directionsService, directionsRenderer) {
@@ -291,38 +228,6 @@
             return degree;
         }
 
-        // Function to convert bearing to detailed direction
-        function bearingToDirection(bearing) {
-            console.log(bearing);
-            if (bearing >= 0 && bearing < 22.5) {
-                return "North";
-            } else if (bearing >= 22.5 && bearing < 45) {
-                return "North East";
-            } else if (bearing >= 45 && bearing < 67.5) {
-                return "East North";
-            } else if (bearing >= 67.5 && bearing < 112.5) {
-                return "East";
-            } else if (bearing >= 112.5 && bearing < 157.5) {
-                return "East South";
-            } else if (bearing >= 157.5 && bearing < 202.5) {
-                return "South";
-            } else if (bearing >= 202.5 && bearing < 247.5) {
-                return "South West";
-            } else if (bearing >= 247.5 && bearing < 292.5) {
-                return "West South";
-            } else if (bearing >= 292.5 && bearing < 337.5) {
-                return "West";
-            } else {
-                return "North West";
-            }
-        }
-
-        // Function to get direction between two coordinates
-        function getDirection(from, to) {
-            const bearing = calculateBearing(from, to);
-            return bearingToDirection(bearing);
-        }
-
         // Function to check if the current position is close enough to the waypoint
         function isAtWaypoint(currentPosition, waypoint) {
             return Math.abs(currentPosition.lat - waypoint.lat) < 0.00005 && Math.abs(currentPosition.lng - waypoint.lng) < 0.00005;
@@ -332,13 +237,13 @@
         function getNextWaypoint(currentPosition) {
             for (let i = 0; i < waypoints.length; i++) {
                 if (isAtWaypoint(currentPosition, waypoints[i])) {
-                    x.innerHTML += `Reached a waypoint! (were ${waypoints.length}<br>`;
+                    x.innerHTML += `Reached a waypoint! (were ${waypoints.length})<br>`;
                     waypoints.splice(i, 1); // Remove the current waypoint from the array
-                    x.innerHTML += `Reached a waypoint! (now ${waypoints.length}<br>`;
-                    return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? getDirection(currentPosition, waypoints[0]) : 'You have reached your destination.' };
+                    x.innerHTML += `Reached a waypoint! (now ${waypoints.length})<br>`;
+                    return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? 'Next waypoint.' : 'You have reached your destination.' };
                 }
             }
-            return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? getDirection(currentPosition, waypoints[0]) : 'You have no more waypoints.' };
+            return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? 'The current waypoint.' : 'You have reached your destination.' };
         }
 
         // Function to manually send the person's location and get directions
@@ -352,26 +257,10 @@
             return result.direction;
         }
 
-        // function success(position) {
-        //     x.innerHTML += "Invocated success<br>";
-
-        //     pos = {
-        //         lat: position.coords.latitude,
-        //         lng: position.coords.longitude
-        //     };
-        //     originMarker.setPosition(pos);
-
-        //     if (pos) {
-        //         getDirectionsForPerson(pos);
-        //     } else {
-        //         alert("Could not get location");
-        //     }
-        // }
-
         document.getElementById('person_submit').addEventListener('click', async function () {
             setInterval(async function () {
                 x.innerHTML += `Interval check called (${personDegree} degrees)<br>`;
-                const pos = await updateUserLocation();
+                pos = await updateUserLocation();
 
                 if (pos) {
                     x.innerHTML += "Retrieved the location<br>";
