@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map Dashboard</title>
+  <style>
+    /* Basic styling */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+    #map {
+      height: 60vh;
+      width: 100%;
+    }
+    .bottom-drawer {
+      background-color: #f8f9fa;
+      padding: 15px;
+      position: relative;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+    .button-grid {
+      display: flex;
+      justify-content: space-between;
+    }
+    .button-grid button {
+      flex: 1;
+      margin: 5px;
+      padding: 10px;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .search-box {
+      display: none;
+      margin-top: 10px;
+    }
+    .search-box input {
+      width: calc(100% - 22px);
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Map container -->
+  <div id="map"></div>
+
+  <!-- Bottom drawer -->
+  <div class="bottom-drawer">
+    <h3>Library</h3>
+    <div class="button-grid">
+      <button id="choose-destination">Choose Destination</button>
+      <button>Monitor Device</button>
+    </div>
+    <div class="search-box" id="search-box">
+      <input type="text" id="search-input" placeholder="Enter destination...">
+    </div>
+  </div>
+
+  <!-- Load the Google Maps API -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&libraries=places&callback=initMap"></script>
+
+  <script>
+    let map;
+    let marker;
+    let searchBox;
+
+    function initMap() {
+      // Initialize the map centered on Warsaw, Poland
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: 52.2297, lng: 21.0122 },
+        zoom: 13
+      });
+
+      // Initialize the search box
+      const input = document.getElementById('search-input');
+      searchBox = new google.maps.places.SearchBox(input);
+
+      // Bias the SearchBox results towards current map's viewport
+      map.addListener('bounds_changed', () => {
+        searchBox.setBounds(map.getBounds());
+      });
+
+      // Listen for the event fired when the user selects a prediction
+      searchBox.addListener('places_changed', () => {
+        const places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+          return;
+        }
+
+        // Clear out the old marker
+        if (marker) {
+          marker.setMap(null);
+        }
+
+        // Get the first place from the list
+        const place = places[0];
+
+        if (!place.geometry) {
+          console.log("Returned place contains no geometry");
+          return;
+        }
+
+        // Create a marker for the selected place
+        marker = new google.maps.Marker({
+          map: map,
+          title: place.name,
+          position: place.geometry.location
+        });
+
+        // Center the map on the selected place
+        map.setCenter(place.geometry.location);
+        map.setZoom(15);
+      });
+    }
+
+    // Toggle the search box visibility when the button is clicked
+    document.getElementById('choose-destination').addEventListener('click', () => {
+      const searchBoxElement = document.getElementById('search-box');
+      if (searchBoxElement.style.display === 'none' || searchBoxElement.style.display === '') {
+        searchBoxElement.style.display = 'block';
+        document.getElementById('search-input').focus();
+      } else {
+        searchBoxElement.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>
