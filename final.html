@@ -82,7 +82,7 @@
         const x = document.getElementById("demo");
 
         function isPlaying(audio) {
-            return !audio.paused && !audio.ended && audio.readyState > 2;
+            return audio.paused || audio.ended;// && audio.readyState > 2;
         }
 
         function startCompass() {
