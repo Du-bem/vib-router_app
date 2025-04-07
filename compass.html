@@ -10,10 +10,9 @@
   <p>Compass Heading: <span id="heading">--</span>°</p>
 
   <script>
-    const startBtn = document.getElementById("start-btn");
-    const headingDisplay = document.getElementById("heading");
     const isIOS = typeof DeviceOrientationEvent !== "undefined" &&
                   typeof DeviceOrientationEvent.requestPermission === "function";
+    let personDegree = 0;
 
     function startCompass() {
       if (isIOS) {
@@ -34,12 +33,12 @@
     function handleOrientation(event) {
       const compass = event.webkitCompassHeading || (360 - event.alpha);
       if (compass !== null && compass !== undefined) {
-        const rounded = Math.round(compass);
-        headingDisplay.textContent = rounded;
+        personDegree = Math.round(compass);
+        alert(personDegree);
       }
     }
 
-    startBtn.addEventListener("click", startCompass);
+    startCompass();
   </script>
 </body>
 </html>
