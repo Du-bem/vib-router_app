@@ -106,14 +106,8 @@
         }
 
         function getLocation() {
-            originMarker.setMap(null);
             setTimeout(function() {
-                originMarker = new google.maps.Marker({
-                    position: {lat: 51.09519169903859, lng: 17.020482763739455},
-                    map: map,
-                    animation: google.maps.Animation.DROP,
-                    title: 'My current position!'
-                });
+                originMarker.setPosition({lat: 51.09519169903859, lng: 17.020482763739455});
             }, 2000);
             x.innerHTML += "We are in!<br>";
             if (navigator.geolocation) {
