@@ -283,7 +283,12 @@
             console.log(`Current Location: Lat ${currentPosition.lat}, Lng ${currentPosition.lng}`);
             console.log(`Next direction: ${result.direction}`);
             console.log(waypoints);
+            vibrateNavigation(result.direction);
             return result.direction;
+        }
+
+        function vibrateNavigation(direction) {
+            navigator.vibrate(500);
         }
 
         document.getElementById('person_submit').addEventListener('click', async function () {
