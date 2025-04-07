@@ -129,7 +129,7 @@
             var directionsRenderer = new google.maps.DirectionsRenderer();
             directionsRenderer.setMap(map);
 
-            const pos = await updateUserLocation();
+            pos = await updateUserLocation();
 
             if (pos) {
                 console.log("put center");
