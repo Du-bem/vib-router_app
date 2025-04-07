@@ -295,7 +295,7 @@
             const pos = await updateUserLocation(); // wait until we get the coordinates
 
             if (pos) {
-                console.log(pos); // guaranteed to be defined here
+                console.log(pos);
                 getDirectionsForPerson(pos);
             } else {
                 alert("Could not get location");
