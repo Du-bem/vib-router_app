@@ -152,9 +152,13 @@
                     map: map,
                     animation: google.maps.Animation.DROP,
                     title: 'My current position!',
-                    label: {
-                        text: "🧍", // Person emoji
-                        fontSize: "24px"
+                    icon: {
+                        url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                <text x="0" y="30" font-size="30">🧍</text>
+            </svg>
+        `),
+                        scaledSize: new google.maps.Size(40, 40)
                     }
                 });
                 map.setCenter(pos);
@@ -279,7 +283,7 @@
 
         // Function to check if the current position is close enough to the waypoint
         function isAtWaypoint(currentPosition, waypoint) {
-            return Math.abs(currentPosition.lat - waypoint.lat) < 0.00003 && Math.abs(currentPosition.lng - waypoint.lng) < 0.00003;
+            return Math.abs(currentPosition.lat - waypoint.lat) < 0.0001 && Math.abs(currentPosition.lng - waypoint.lng) < 0.0001;
         }
 
         // Function to get the next waypoint and direction
