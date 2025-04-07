@@ -67,8 +67,9 @@
         <button type="button" id="person_submit">Route</button>
         <!-- <button onclick="getLocation()" id="person_submit">Vibrate</button> -->
         <br>
-        <p id="demo"></p>
         <p id="status"></p>
+        <br>
+        <p id="demo"></p>
     </div>
     <script>
         var originMarker;
@@ -104,6 +105,7 @@
                 if (!waypoints.length) {
                     // personDegree.
                     // document.getElementById("status").innerHTML = `Point: ${calculateBearing(pos, waypoints[0])} degrees, person ${personDegree} degrees.`;
+                    alert((abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20));
                     document.getElementById("status").innerHTML = (abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20) ? "good" : "bad";
                 }
             }
