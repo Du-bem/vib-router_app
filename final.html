@@ -219,6 +219,8 @@
 
                         // routePolyline.setMap(map);
 
+                        drawRouteWithMarkers();
+
                     } else {
                         window.alert('Directions request failed due to ' + status);
                     }
@@ -303,10 +305,10 @@
                     waypoints.splice(i, 1); // Remove the current waypoint from the array
                     x.innerHTML += `Reached a waypoint! (now ${waypoints.length})<br>`;
                     drawRouteWithMarkers();
-                    return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? 'Next waypoint.' : 'You have reached your destination.' };
+                    return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? true : false };
                 }
             }
-            return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? 'The current waypoint.' : 'You have reached your destination.' };
+            return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? true : false };
         }
 
         // Function to manually send the person's location and get directions
@@ -323,6 +325,8 @@
 
         async function intervalFunction() {
             if (isRunning) return; // prevent duplicate loops
+
+            let result = true;
             isRunning = true;
 
             x.innerHTML += "call the function<br>";
@@ -333,17 +337,22 @@
             x.innerHTML += "after the position<br>";
 
             if (pos) {
-                getDirectionsForPerson(pos);
+                result = getDirectionsForPerson(pos);
             } else {
                 alert("Could not get location");
             }
 
-            // Schedule the next execution
-            setTimeout(() => {
-                isRunning = false; // allow next run
-                x.innerHTML = "";
-                intervalFunction();
-            }, 5000);
+            if (!result) {
+                // isRunning = false; // allow next run
+                // x.innerHTML = "";
+
+                // Schedule the next execution
+                setTimeout(() => {
+                    isRunning = false; // allow next run
+                    x.innerHTML = "";
+                    intervalFunction();
+                }, 5000);
+            }
         }
 
         document.getElementById('person_submit').addEventListener('click', intervalFunction);
