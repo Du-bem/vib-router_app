@@ -335,11 +335,14 @@
             console.log(`Next direction: ${result.direction}`);
             console.log(waypoints);
             x.innerHTML += `Go ${result.direction}<br>`;
-            vibrateNavigation(result.direction);
+            vibrateNavigation(currentPosition, waypoints[0]);
             return result.direction;
         }
 
-        function vibrateNavigation(direction) {
+        function vibrateNavigation(currentPosition, waypoint) {
+            // personDegree
+            x.innerHTML += `Point: ${calculateBearing(currentPosition, waypoint)} degrees, ${personDegree} degrees.`;
+
             navigator.vibrate(500);
             let ding = new Audio('sound.mp3');
             ding.play();
