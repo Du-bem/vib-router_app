@@ -22,62 +22,82 @@
   <p class="direction" id="direction">North</p>
 
   <script>
+    // DOM elements to display compass data
     const headingElement = document.getElementById("heading");
     const directionElement = document.getElementById("direction");
 
-    if ('DeviceOrientationEvent' in window) {
-      // Check if explicit permission is required (iOS devices)
-      if (typeof DeviceOrientationEvent.requestPermission === "function") {
-        const permissionButton = document.createElement("button");
-        permissionButton.textContent = "Enable Compass";
-        document.body.appendChild(permissionButton);
-
-        permissionButton.addEventListener("click", () => {
-          DeviceOrientationEvent.requestPermission()
-            .then((response) => {
-              if (response === "granted") {
-                startListening();
-                permissionButton.remove();
-              } else {
-                alert("Permission denied for accessing compass.");
-              }
-            })
-            .catch((error) => console.error("Permission error:", error));
-        });
-      } else {
-        startListening(); // For devices that don't require explicit permission
-      }
-    } else {
-      alert("DeviceOrientation API is not supported on this device.");
+    // Function to determine cardinal direction based on heading
+    function getCardinalDirection(heading) {
+        if (heading >= 0 && heading <= 22.5 || heading > 337.5 && heading <= 360) {
+            return "North";
+        } else if (heading > 22.5 && heading <= 67.5) {
+            return "Northeast";
+        } else if (heading > 67.5 && heading <= 112.5) {
+            return "East";
+        } else if (heading > 112.5 && heading <= 157.5) {
+            return "Southeast";
+        } else if (heading > 157.5 && heading <= 202.5) {
+            return "South";
+        } else if (heading > 202.5 && heading <= 247.5) {
+            return "Southwest";
+        } else if (heading > 247.5 && heading <= 292.5) {
+            return "West";
+        } else if (heading > 292.5 && heading <= 337.5) {
+            return "Northwest";
+        }
+        return "Unknown";
     }
 
-    function startListening() {
-      window.addEventListener("deviceorientation", (event) => {
-        const alpha = event.alpha; // Heading in degrees
-        headingElement.textContent = alpha ? alpha.toFixed(2) : "N/A";
+    // Check for DeviceOrientationEvent support
+    if ('DeviceOrientationEvent' in window) {
+        // Check if explicit permission is required (iOS devices)
+        if (typeof DeviceOrientationEvent.requestPermission === "function") {
+            const permissionButton = document.createElement("button");
+            permissionButton.textContent = "Enable Compass";
+            document.body.appendChild(permissionButton);
 
-        // Determine cardinal direction based on alpha value
-        let direction = "Unknown";
-        if (alpha >= 0 && alpha <= 22.5 || alpha > 337.5 && alpha <= 360) {
-          direction = "North";
-        } else if (alpha > 22.5 && alpha <= 67.5) {
-          direction = "Northeast";
-        } else if (alpha > 67.5 && alpha <= 112.5) {
-          direction = "East";
-        } else if (alpha > 112.5 && alpha <= 157.5) {
-          direction = "Southeast";
-        } else if (alpha > 157.5 && alpha <= 202.5) {
-          direction = "South";
-        } else if (alpha > 202.5 && alpha <= 247.5) {
-          direction = "Southwest";
-        } else if (alpha > 247.5 && alpha <= 292.5) {
-          direction = "West";
-        } else if (alpha > 292.5 && alpha <= 337.5) {
-          direction = "Northwest";
+            permissionButton.addEventListener("click", () => {
+                DeviceOrientationEvent.requestPermission()
+                    .then((response) => {
+                        if (response === "granted") {
+                            startCompass();
+                            permissionButton.remove();
+                        } else {
+                            alert("Permission denied for accessing compass.");
+                        }
+                    })
+                    .catch((error) => console.error("Permission error:", error));
+            });
+        } else {
+            // Start compass directly for devices that don't require explicit permission
+            startCompass();
         }
+    } else {
+        alert("DeviceOrientation API is not supported on this device.");
+    }
 
-        directionElement.textContent = direction;
-      });
+    // Function to start listening to compass data
+    function startCompass() {
+        window.addEventListener("deviceorientation", (event) => {
+            let heading;
+
+            // Use webkitCompassHeading for accurate compass readings on iOS
+            if (event.webkitCompassHeading !== undefined) {
+                heading = event.webkitCompassHeading; // Heading in degrees relative to North
+            } else if (event.alpha !== null) {
+                // Fallback to alpha value for non-iOS devices
+                heading = event.alpha;
+            }
+
+            // Display the heading and cardinal direction
+            if (heading !== undefined && !isNaN(heading)) {
+                headingElement.textContent = `${Math.round(heading)}°`;
+                directionElement.textContent = getCardinalDirection(heading);
+            } else {
+                headingElement.textContent = "N/A";
+                directionElement.textContent = "Unknown";
+            }
+        });
     }
   </script>
 </body>
