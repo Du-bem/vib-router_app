@@ -155,12 +155,13 @@
                     icon: {
                         url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
-                <text x="0" y="14" font-size="14">🧍</text>
+                <text x="0" y="18" font-size="18">🧍</text>
             </svg>
         `),
                         scaledSize: new google.maps.Size(24, 24)
                     }
                 });
+
                 map.setCenter(pos);
                 document.getElementById('submit').addEventListener('click', function () {
                     console.log('ok my location');
