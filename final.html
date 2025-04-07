@@ -65,7 +65,7 @@
         <button id="submit">Go!</button>
         <br>
         <input type="text" id="person_position" placeholder="Please put the person coordinate">
-        <button id="person_submit">Go!</button>
+        <button onclick="abcde()">Go adasd asd asdsadsadsadsad!</button>
         <p id="abc">no</p>
     </div>
     <button onclick="getLocation()">Try It</button>
@@ -288,12 +288,7 @@
             return result.direction;
         }
 
-        function vibrateNavigation(direction) {
-            document.getElementById("abc").innerHTML = "vibrating";
-            navigator.vibrate(6000);
-        }
-
-        document.getElementById('person_submit').addEventListener('click', function () {
+        function abcde() {
             // const pos = await updateUserLocation(); // wait until we get the coordinates
 
             // if (pos) {
@@ -306,7 +301,7 @@
             // }
 
             navigator.vibrate(6000);
-        });
+        };
 
     </script>
 
