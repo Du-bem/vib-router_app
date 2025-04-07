@@ -108,6 +108,10 @@
                     // alert((abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20));
                     document.getElementById("status").innerHTML = (Math.abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20) ? "good" : "bad";
                     document.getElementById("status").innerHTML += `<br>${calculateBearing(pos, waypoints[0])} and ${personDegree}`;
+
+                    navigator.vibrate(500);
+                    let ding = new Audio('sound.mp3');
+                    ding.play();
                 }
             }
         }
@@ -345,14 +349,7 @@
             console.log(`Next direction: ${result.direction}`);
             console.log(waypoints);
             x.innerHTML += `Go ${result.direction}<br>`;
-            vibrateNavigation();
             return result.direction;
-        }
-
-        function vibrateNavigation() {
-            navigator.vibrate(500);
-            let ding = new Audio('sound.mp3');
-            ding.play();
         }
 
         // function success(position) {
