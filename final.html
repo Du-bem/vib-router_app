@@ -68,31 +68,17 @@
         <button onclick="abcde()">Go adasd asd asdsadsadsadsad!</button>
         <p id="abc">no</p>
     </div>
-    <button onclick="getLocation()">Try It</button>
-
-    <p id="demo"></p>
-
     <script>
-        const x = document.getElementById("demo");
+        
 
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(success, error);
+        function abcde() {
+            if ("vibrate" in navigator) {
+                navigator.vibrate(500);
             } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
+                console.log("Vibration API not supported on this device.");
             }
-        }
-
-        function success(position) {
-            x.innerHTML = "Latitude: " + position.coords.latitude +
-                "<br>Longitude: " + position.coords.longitude;
-        }
-
-        function error() {
-            alert("Sorry, no position available.");
-        }
-    </script>
-    <script>
+        };
+        
         var pos;
         var map, infoWindow;
         let waypoints = [];
@@ -287,10 +273,6 @@
             vibrateNavigation(result.direction);
             return result.direction;
         }
-
-        function abcde() {
-            navigator.vibrate(6000);
-        };
         
         // document.getElementById('person_submit').addEventListener('click', async function () {
         //     const pos = await updateUserLocation(); // wait until we get the coordinates
