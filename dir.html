@@ -97,6 +97,7 @@ function startCompass() {
 
             // Trigger vibration when the heading is approximately 120 degrees
             if (Math.abs(heading - 120) <= 2) { // Allow a small range around 120 degrees
+                alert("Vibrating...");
                 triggerVibration();
             }
         } else {
