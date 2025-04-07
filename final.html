@@ -111,7 +111,7 @@
                     document.getElementById("status").innerHTML = good ? "good" : "bad";
                     document.getElementById("status").innerHTML += `<br>${calculateBearing(pos, waypoints[0])} and ${personDegree}`;
 
-                    if (isPlaying(ding)) {
+                    if (!good && !isPlaying(ding)) {
                         navigator.vibrate(1000);
                         ding.play();
                     }
