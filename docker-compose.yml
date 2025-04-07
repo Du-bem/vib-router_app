@@ -10,6 +10,7 @@ services:
     volumes:
       - ./app:/app
       - ./db:/app/db
+      - ./app/certs:/app/certs
     environment:
       FLASK_APP: app.py
       FLASK_ENV: development

@@ -7,15 +7,14 @@ WORKDIR /app
 # Copy the application code into the container
 COPY app/ /app
 
+# Copy SSL certificates into the container
+COPY app/certs/ /app/certs
+
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
-
-RUN apt-get update && apt-get install -y \
-    sqlite3 \
-    && rm -rf /var/lib/apt/lists/* 
 
 # Expose the port the app runs on
 EXPOSE 5000
 
-# Command to run the application
+# Command to run the application with SSL
 CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
