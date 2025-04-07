@@ -9,11 +9,12 @@
     <body>
         <div class="navbar">
             <a href="{{ url_for('home') }}" class="navbar-brand">Home</a>
-            <a href="{{ url_for('about') }}" class="navbar-item">About</a>
+            <a href="{{ url_for('map') }}" class="navbar-item">Map</a>
             {% if 'user' in session %}
                 <a href="{{ url_for('logout') }}" class="navbar-item">Logout</a>
             {% else %}
                 <a href="{{ url_for('login') }}" class="navbar-item">Login</a>
+                <a href="{{ url_for('register') }}" class="navbar-item">Register</a>
             {% endif %}
         </div>
 
