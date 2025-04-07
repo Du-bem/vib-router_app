@@ -363,7 +363,7 @@
 
         document.getElementById('person_submit').addEventListener('click', async function () {
             setInterval(async function () {
-                x.innerHTML += `Interval check called (${personDegree} degrees)<br>";
+                x.innerHTML += `Interval check called (${personDegree} degrees)<br>`;
                 const pos = await updateUserLocation();
 
                 if (pos) {
