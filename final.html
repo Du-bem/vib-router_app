@@ -288,13 +288,16 @@
         }
 
         function vibrateNavigation(direction) {
+            alert("vibrate now")
             navigator.vibrate(500);
         }
 
         document.getElementById('person_submit').addEventListener('click', async function () {
+            alert("lets update the location");
             const pos = await updateUserLocation(); // wait until we get the coordinates
 
             if (pos) {
+                alert("we got a new location");
                 console.log(pos); // guaranteed to be defined here
                 getDirectionsForPerson(pos);
             } else {
