@@ -23,82 +23,82 @@
 
   <script>
     // DOM elements to display compass data
-    const headingElement = document.getElementById("heading");
-    const directionElement = document.getElementById("direction");
+const headingElement = document.getElementById("heading");
+const directionElement = document.getElementById("direction");
 
-    // Function to determine cardinal direction based on heading
-    function getCardinalDirection(heading) {
-        if (heading >= 0 && heading <= 22.5 || heading > 337.5 && heading <= 360) {
-            return "North";
-        } else if (heading > 22.5 && heading <= 67.5) {
-            return "Northeast";
-        } else if (heading > 67.5 && heading <= 112.5) {
-            return "East";
-        } else if (heading > 112.5 && heading <= 157.5) {
-            return "Southeast";
-        } else if (heading > 157.5 && heading <= 202.5) {
-            return "South";
-        } else if (heading > 202.5 && heading <= 247.5) {
-            return "Southwest";
-        } else if (heading > 247.5 && heading <= 292.5) {
-            return "West";
-        } else if (heading > 292.5 && heading <= 337.5) {
-            return "Northwest";
-        }
-        return "Unknown";
+// Function to determine cardinal direction based on heading
+function getCardinalDirection(heading) {
+    if (heading >= 0 && heading <= 22.5 || heading > 337.5 && heading <= 360) {
+        return "North";
+    } else if (heading > 22.5 && heading <= 67.5) {
+        return "Northeast";
+    } else if (heading > 67.5 && heading <= 112.5) {
+        return "East";
+    } else if (heading > 112.5 && heading <= 157.5) {
+        return "Southeast";
+    } else if (heading > 157.5 && heading <= 202.5) {
+        return "South";
+    } else if (heading > 202.5 && heading <= 247.5) {
+        return "Southwest";
+    } else if (heading > 247.5 && heading <= 292.5) {
+        return "West";
+    } else if (heading > 292.5 && heading <= 337.5) {
+        return "Northwest";
     }
+    return "Unknown";
+}
 
-    // Check for DeviceOrientationEvent support
-    if ('DeviceOrientationEvent' in window) {
-        // Check if explicit permission is required (iOS devices)
-        if (typeof DeviceOrientationEvent.requestPermission === "function") {
-            const permissionButton = document.createElement("button");
-            permissionButton.textContent = "Enable Compass";
-            document.body.appendChild(permissionButton);
+// Check for DeviceOrientationEvent support
+if ('DeviceOrientationEvent' in window) {
+    // Check if explicit permission is required (iOS devices)
+    if (typeof DeviceOrientationEvent.requestPermission === "function") {
+        const permissionButton = document.createElement("button");
+        permissionButton.textContent = "Enable Compass";
+        document.body.appendChild(permissionButton);
 
-            permissionButton.addEventListener("click", () => {
-                DeviceOrientationEvent.requestPermission()
-                    .then((response) => {
-                        if (response === "granted") {
-                            startCompass();
-                            permissionButton.remove();
-                        } else {
-                            alert("Permission denied for accessing compass.");
-                        }
-                    })
-                    .catch((error) => console.error("Permission error:", error));
-            });
-        } else {
-            // Start compass directly for devices that don't require explicit permission
-            startCompass();
-        }
-    } else {
-        alert("DeviceOrientation API is not supported on this device.");
-    }
-
-    // Function to start listening to compass data
-    function startCompass() {
-        window.addEventListener("deviceorientation", (event) => {
-            let heading;
-
-            // Use webkitCompassHeading for accurate compass readings on iOS
-            if (event.webkitCompassHeading !== undefined) {
-                heading = event.webkitCompassHeading; // Heading in degrees relative to North
-            } else if (event.alpha !== null) {
-                // Fallback to alpha value for non-iOS devices
-                heading = event.alpha;
-            }
-
-            // Display the heading and cardinal direction
-            if (heading !== undefined && !isNaN(heading)) {
-                headingElement.textContent = `${Math.round(heading)}°`;
-                directionElement.textContent = getCardinalDirection(heading);
-            } else {
-                headingElement.textContent = "N/A";
-                directionElement.textContent = "Unknown";
-            }
+        permissionButton.addEventListener("click", () => {
+            DeviceOrientationEvent.requestPermission()
+                .then((response) => {
+                    if (response === "granted") {
+                        startCompass();
+                        permissionButton.remove();
+                    } else {
+                        alert("Permission denied for accessing compass.");
+                    }
+                })
+                .catch((error) => console.error("Permission error:", error));
         });
+    } else {
+        // Start compass directly for devices that don't require explicit permission
+        startCompass();
     }
+} else {
+    alert("DeviceOrientation API is not supported on this device.");
+}
+
+// Function to start listening to compass data
+function startCompass() {
+    window.addEventListener("deviceorientation", (event) => {
+        let heading;
+
+        // Use webkitCompassHeading for accurate compass readings on iOS
+        if (event.webkitCompassHeading !== undefined) {
+            heading = event.webkitCompassHeading; // Heading in degrees relative to North
+        } else if (event.alpha !== null) {
+            // Fallback to alpha value for non-iOS devices
+            heading = event.alpha;
+        }
+
+        // Display the heading and cardinal direction
+        if (heading !== undefined && !isNaN(heading)) {
+            headingElement.textContent = `${Math.round(heading)}°`;
+            directionElement.textContent = getCardinalDirection(heading);
+        } else {
+            headingElement.textContent = "N/A";
+            directionElement.textContent = "Unknown";
+        }
+    });
+}
   </script>
 </body>
 </html>
