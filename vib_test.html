@@ -8,6 +8,7 @@
 <body>
     <button>Click2!!</button>
     <button id="guzik" onclick="example2()">Click!</button>
+    <button id="guzik" onclick="function1()">Click!</button>
 <script>
     function example2() {
         // For a single value you can pass in a Number rather than an Array
@@ -17,6 +18,12 @@
         document.getElementById("guzik").click();    
     }, 3000)
     
+
+    function function1() {
+        setTimeout(function(){
+        document.getElementById("guzik").click();    
+    }, 3000)
+    }
 </script>
 </body>
 </html>
