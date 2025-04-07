@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-    <h1>Hello</h1>
+  <div class="container">
+    <div class="map-header"></div>
+
+    <div class="login-box">
+      <h1>Welcome!</h1>
+      <form method="POST" action="">
+          <input type="email" placeholder="Email Address" id="login-email" required />
+          <div class="password-wrapper">
+            <input type="password" placeholder="Password" id="login-password" required />
+            <span class="toggle-password" onclick="togglePassword('login-password')">👁️</span>
+          </div>
+          <a href="#" class="forgot">Forgot password?</a>
+          <button type="submit" class="login-btn">Login</button>
+      </form>
+        <p class="register-text">Not a member? <a href="register.html">Register now</a></p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
