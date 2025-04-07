@@ -136,11 +136,11 @@
                             console.error('Geolocation error:', error.message);
                             resolve(null); // or reject(error) if you want to throw
                         },
-                        // {
-                        //     enableHighAccuracy: true,   // Set to true only if you really need high accuracy
-                        //     timeout: 5000,               // Timeout after 5 seconds
-                        //     maximumAge: 10000            // Accept a cached position that's up to 10 seconds old
-                        // }
+                        {
+                            enableHighAccuracy: true,   // Set to true only if you really need high accuracy
+                            // timeout: 5000,               // Timeout after 5 seconds
+                            // maximumAge: 10000            // Accept a cached position that's up to 10 seconds old
+                        }
                     );
                 } else {
                     alert('Browser does not support Geolocation!');
