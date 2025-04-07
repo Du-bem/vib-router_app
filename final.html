@@ -87,6 +87,11 @@
                         function (error) {
                             console.error('Geolocation error:', error.message);
                             resolve(null); // or reject(error) if you want to throw
+                        },
+                        {
+                            enableHighAccuracy: false,   // Set to true only if you really need high accuracy
+                            timeout: 5000,               // Timeout after 5 seconds
+                            maximumAge: 10000            // Accept a cached position that's up to 10 seconds old
                         }
                     );
                 } else {
@@ -270,17 +275,20 @@
         }
 
         document.getElementById('person_submit').addEventListener('click', async function () {
-            document.getElementById("abc").innerHTML = "button clicked";
-            const pos = await updateUserLocation(); // wait until we get the coordinates
+            setInterval(async function () {
+                console.log(123);
+                document.getElementById("abc").innerHTML = "button clicked";
+                const pos = await updateUserLocation(); // wait until we get the coordinates
 
-            if (pos) {
-                document.getElementById("abc").innerHTML = "after await";
-                console.log(pos);
-                getDirectionsForPerson(pos);
-            } else {
-                alert("Could not get location");
-                // optionally show a message to the user or handle fallback
-            }
+                if (pos) {
+                    document.getElementById("abc").innerHTML = "after await";
+                    console.log(pos);
+                    getDirectionsForPerson(pos);
+                } else {
+                    alert("Could not get location");
+                    // optionally show a message to the user or handle fallback
+                }
+            }, 5000);
         });
 
     </script>
