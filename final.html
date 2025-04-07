@@ -81,6 +81,7 @@
         let ding = new Audio('sound.mp3');
         let routePolyline = null;
         let routeMarkers = [];
+        const degreeTolerance = 35;
         const x = document.getElementById("demo");
 
         function isPlaying(audio) {
@@ -109,7 +110,7 @@
                 personDegree = Math.round(compass);
 
                 if (waypoints.length && pos) {
-                    let good = (Math.abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20);
+                    let good = (Math.abs(calculateBearing(pos, waypoints[0]) - personDegree) < degreeTolerance);
                     document.getElementById("status").innerHTML = good ? "good" : "bad";
                     document.getElementById("status").innerHTML += `<br>${calculateBearing(pos, waypoints[0])} and ${personDegree}`;
 
