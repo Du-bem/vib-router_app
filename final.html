@@ -284,7 +284,7 @@
 
         // Function to check if the current position is close enough to the waypoint
         function isAtWaypoint(currentPosition, waypoint) {
-            return Math.abs(currentPosition.lat - waypoint.lat) < 0.0001 && Math.abs(currentPosition.lng - waypoint.lng) < 0.0001;
+            return Math.abs(currentPosition.lat - waypoint.lat) < 0.00005 && Math.abs(currentPosition.lng - waypoint.lng) < 0.00005;
         }
 
         // Function to get the next waypoint and direction
