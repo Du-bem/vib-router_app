@@ -68,6 +68,7 @@
         <!-- <button onclick="getLocation()" id="person_submit">Vibrate</button> -->
         <br>
         <p id="demo"></p>
+        <p id="status"></p>
     </div>
     <script>
         var originMarker;
@@ -99,6 +100,12 @@
             const compass = event.webkitCompassHeading || (360 - event.alpha);
             if (compass !== null && compass !== undefined) {
                 personDegree = Math.round(compass);
+
+                if (!waypoints.length) {
+                    // personDegree.
+                    // document.getElementById("status").innerHTML = `Point: ${calculateBearing(pos, waypoints[0])} degrees, person ${personDegree} degrees.`;
+                    document.getElementById("status").innerHTML = (abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20) ? "good" : "bad";
+                }
             }
         }
 
@@ -335,14 +342,11 @@
             console.log(`Next direction: ${result.direction}`);
             console.log(waypoints);
             x.innerHTML += `Go ${result.direction}<br>`;
-            vibrateNavigation(currentPosition, waypoints[0]);
+            vibrateNavigation();
             return result.direction;
         }
 
-        function vibrateNavigation(currentPosition, waypoint) {
-            // personDegree
-            x.innerHTML += `Point: ${calculateBearing(currentPosition, waypoint)} degrees, ${personDegree} degrees.`;
-
+        function vibrateNavigation() {
             navigator.vibrate(500);
             let ding = new Audio('sound.mp3');
             ding.play();
