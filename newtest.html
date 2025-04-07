@@ -20,6 +20,7 @@ function getLocation() {
 }
     
 function success(position) {
+    console.log(position);
     x.innerHTML="Latitude: " + position.coords.latitude + 
     "<br>Longitude: " + position.coords.longitude +
     "<br>Heading: " + position.heading;
