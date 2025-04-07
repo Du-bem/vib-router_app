@@ -291,7 +291,9 @@
         function getNextWaypoint(currentPosition) {
             for (let i = 0; i < waypoints.length; i++) {
                 if (isAtWaypoint(currentPosition, waypoints[i])) {
+                    x.innerHTML += `Reached a waypoint! (were ${waypoints.length}<br>`;
                     waypoints.splice(i, 1); // Remove the current waypoint from the array
+                    x.innerHTML += `Reached a waypoint! (now ${waypoints.length}<br>`;
                     return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? getDirection(currentPosition, waypoints[0]) : 'You have reached your destination.' };
                 }
             }
