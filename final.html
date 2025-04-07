@@ -300,15 +300,15 @@
 
         // Function to get the next waypoint and direction
         function getNextWaypoint(currentPosition) {
-            for (let i = 0; i < waypoints.length; i++) {
-                if (isAtWaypoint(currentPosition, waypoints[i])) {
+            // for (let i = 0; i < waypoints.length; i++) {
+                if (isAtWaypoint(currentPosition, waypoints[0])) {
                     x.innerHTML += `Reached a waypoint! (were ${waypoints.length})<br>`;
-                    waypoints.splice(i, 1); // Remove the current waypoint from the array
+                    waypoints.splice(0, 1); // Remove the current waypoint from the array
                     x.innerHTML += `Reached a waypoint! (now ${waypoints.length})<br>`;
                     drawRouteWithMarkers();
                     return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? true : false };
                 }
-            }
+            // }
             return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? true : false };
         }
 
