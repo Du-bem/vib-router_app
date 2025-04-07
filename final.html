@@ -96,26 +96,31 @@
         var map, infoWindow;
         let waypoints = [];
 
-        function updateUserLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    pos = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                }, function() {
-                    alert('current position issue');
-                });
-            } else {
-                alert('Browser does not support Geolocation!');
-
-                return false;
-            }
-
-            return true;
+        async function updateUserLocation() {
+            return new Promise((resolve, reject) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function (position) {
+                            const pos = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+                            resolve(pos); // return the coordinates
+                        },
+                        function (error) {
+                            console.error('Geolocation error:', error.message);
+                            resolve(null); // or reject(error) if you want to throw
+                        }
+                    );
+                } else {
+                    alert('Browser does not support Geolocation!');
+                    resolve(null);
+                }
+            });
         }
 
-        function initMap() {
+
+        async function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: -34.397, lng: 150.644 },
                 zoom: 12
@@ -123,8 +128,10 @@
             var directionsService = new google.maps.DirectionsService();
             var directionsRenderer = new google.maps.DirectionsRenderer();
             directionsRenderer.setMap(map);
-            
-            if (updateUserLocation()) {
+
+            const pos = await updateUserLocation();
+
+            if (pos) {
                 console.log("put center");
                 console.log(pos);
                 var originMarker = new google.maps.Marker({
@@ -138,6 +145,9 @@
                     console.log('ok my location');
                     calculateAndDisplayRoute(pos, directionsService, directionsRenderer)
                 });
+            } else {
+                alert("Could not retrieve location. Using default coordinates maybe?");
+                // Handle fallback behavior
             }
 
             // // Try HTML5 geolocation.
