@@ -7,23 +7,20 @@
 </head>
 <body>
     <button>Click2!!</button>
-    <button id="guzik" onclick="example2()">Click!</button>
-    <button id="guzik" onclick="function1()">Click!</button>
+    <!-- <button id="guzik" onclick="example2()">Click!</button> -->
 <script>
     function example2() {
         // For a single value you can pass in a Number rather than an Array
         navigator.vibrate(6000);
         }
-    setTimeout(function(){
-        document.getElementById("guzik").click();    
-    }, 3000)
+    // setTimeout(function(){
+    //     document.getElementById("guzik").click();    
+    // }, 3000)
     
-
-    function function1() {
-        setTimeout(function(){
-        document.getElementById("guzik").click();    
-    }, 3000)
-    }
+    setInterval(function(){
+        navigator.vibrate(1000);
+    }, 5000)
+    
 </script>
 </body>
 </html>
