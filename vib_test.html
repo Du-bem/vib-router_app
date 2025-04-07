@@ -6,13 +6,14 @@
     <title>Document</title>
 </head>
 <body>
-    <button onclick="example2()">Click!</button>
+    <button id="guzik" onclick="example2()">Click!</button>
 <script>
     function example2() {
         // For a single value you can pass in a Number rather than an Array
         navigator.vibrate(6000);
         }
-    example2()
+    
+    document.getElementById("guzik").click();
 </script>
 </body>
 </html>
