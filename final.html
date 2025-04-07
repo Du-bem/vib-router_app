@@ -64,20 +64,11 @@
         <input type="text" id="destination_input" placeholder="Please put destination">
         <button id="submit">Go!</button>
         <br>
-        <button onclick="abcde()">Go adasd asd asdsadsadsadsad!</button>
+        <button id="person_submit">Vibrate</button>
+        <br>
         <p id="abc">no</p>
     </div>
     <script>
-        
-
-        function abcde() {
-            if ("vibrate" in navigator) {
-                navigator.vibrate(500);
-            } else {
-                alert("Vibration API not supported on this device.");
-            }
-        };
-
         var pos;
         var map, infoWindow;
         let waypoints = [];
@@ -273,18 +264,20 @@
             return result.direction;
         }
         
-        // document.getElementById('person_submit').addEventListener('click', async function () {
-        //     const pos = await updateUserLocation(); // wait until we get the coordinates
+        document.getElementById('person_submit').addEventListener('click', async function () {
+            // const pos = await updateUserLocation(); // wait until we get the coordinates
 
-        //     if (pos) {
-        //         document.getElementById("abc").innerHTML = "no";
-        //         console.log(pos);
-        //         getDirectionsForPerson(pos);
-        //     } else {
-        //         alert("Could not get location");
-        //         // optionally show a message to the user or handle fallback
-        //     }
-        // });
+            // if (pos) {
+            //     document.getElementById("abc").innerHTML = "no";
+            //     console.log(pos);
+            //     getDirectionsForPerson(pos);
+            // } else {
+            //     alert("Could not get location");
+            //     // optionally show a message to the user or handle fallback
+            // }
+
+            navigator.vibrate(500);
+        });
 
     </script>
 
