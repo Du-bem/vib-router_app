@@ -97,8 +97,11 @@
         let waypoints = [];
 
         function updateUserLocation() {
+            console.log(1);
             if (navigator.geolocation) {
+                console.log(2);
                 navigator.geolocation.getCurrentPosition(function (position) {
+                    console.log(3);
                     pos = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
