@@ -225,7 +225,7 @@
                 });
         }
 
-        function drawRouteWithMarkers(pathPoints) {
+        function drawRouteWithMarkers() {
             // Clear existing polyline
             if (routePolyline) {
                 routePolyline.setMap(null);
@@ -235,11 +235,11 @@
             routeMarkers.forEach(marker => marker.setMap(null));
             routeMarkers = [];
 
-            if (!pathPoints || pathPoints.length === 0) return;
+            if (!waypoints || waypoints.length === 0) return;
 
             // Draw new polyline
             routePolyline = new google.maps.Polyline({
-                path: pathPoints,
+                path: waypoints,
                 geodesic: true,
                 strokeColor: '#007bff', // blue path
                 strokeOpacity: 1.0,
@@ -248,7 +248,7 @@
             routePolyline.setMap(map);
 
             // Add numbered markers
-            pathPoints.forEach((latlng, index) => {
+            waypoints.forEach((latlng, index) => {
                 const marker = new google.maps.Marker({
                     position: latlng,
                     map: map,
@@ -302,7 +302,7 @@
                     x.innerHTML += `Reached a waypoint! (were ${waypoints.length})<br>`;
                     waypoints.splice(i, 1); // Remove the current waypoint from the array
                     x.innerHTML += `Reached a waypoint! (now ${waypoints.length})<br>`;
-                    drawRouteWithMarkers(waypoints);
+                    drawRouteWithMarkers();
                     return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? 'Next waypoint.' : 'You have reached your destination.' };
                 }
             }
