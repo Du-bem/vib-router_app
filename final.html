@@ -82,7 +82,7 @@
         const x = document.getElementById("demo");
 
         function isPlaying(audio) {
-            return !audio.paused && !audio.ended;// && audio.readyState > 2;
+            return !audio.paused && !audio.ended;
         }
 
         function startCompass() {
@@ -112,7 +112,7 @@
                     document.getElementById("status").innerHTML += `<br>${calculateBearing(pos, waypoints[0])} and ${personDegree}`;
 
                     if (!good && !isPlaying(ding)) {
-                        navigator.vibrate(1000);
+                        navigator.vibrate(500);
                         ding.play();
                     }
                 }
@@ -257,19 +257,35 @@
             return result.direction;
         }
 
-        document.getElementById('person_submit').addEventListener('click', async function () {
-            setInterval(async function () {
-                x.innerHTML += `Interval check called (${personDegree} degrees)<br>`;
-                pos = await updateUserLocation();
+        let isRunning = false;
 
-                if (pos) {
-                    x.innerHTML += "Retrieved the location<br>";
-                    getDirectionsForPerson(pos);
-                } else {
-                    alert("Could not get location");
-                }
-            }, 10000);
-        });
+        async function intervalFunction() {
+            if (isRunning) return; // prevent duplicate loops
+            isRunning = true;
+
+            alert("call the function");
+
+            x.innerHTML += `Interval check called (${personDegree} degrees)<br>`;
+            const pos = await updateUserLocation();
+
+            alert("after the position");
+
+            if (pos) {
+                x.innerHTML += "Retrieved the location<br>";
+                getDirectionsForPerson(pos);
+            } else {
+                alert("Could not get location");
+            }
+
+            // Schedule the next execution
+            setTimeout(() => {
+                isRunning = false; // allow next run
+                intervalFunction();
+            }, 5000);
+        }
+
+        document.getElementById('person_submit').addEventListener('click', intervalFunction);
+
 
     </script>
 
