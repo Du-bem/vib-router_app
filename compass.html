@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple Compass</title>
+</head>
+<body>
+  <button id="start-btn">Start Compass</button>
+  <p>Compass Heading: <span id="heading">--</span>°</p>
+
+  <script>
+    const startBtn = document.getElementById("start-btn");
+    const headingDisplay = document.getElementById("heading");
+    const isIOS = typeof DeviceOrientationEvent !== "undefined" &&
+                  typeof DeviceOrientationEvent.requestPermission === "function";
+
+    function startCompass() {
+      if (isIOS) {
+        DeviceOrientationEvent.requestPermission()
+          .then(response => {
+            if (response === "granted") {
+              window.addEventListener("deviceorientation", handleOrientation);
+            } else {
+              alert("Permission denied.");
+            }
+          })
+          .catch(() => alert("DeviceOrientation not supported or denied."));
+      } else {
+        window.addEventListener("deviceorientationabsolute", handleOrientation);
+      }
+    }
+
+    function handleOrientation(event) {
+      const compass = event.webkitCompassHeading || (360 - event.alpha);
+      if (compass !== null && compass !== undefined) {
+        const rounded = Math.round(compass);
+        headingDisplay.textContent = rounded;
+      }
+    }
+
+    startBtn.addEventListener("click", startCompass);
+  </script>
+</body>
+</html>
