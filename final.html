@@ -79,6 +79,9 @@
             typeof DeviceOrientationEvent.requestPermission === "function";
         let personDegree = 0;
         let ding = new Audio('sound.mp3');
+        let routePolyline = null;
+        let routeMarkers = [];
+        const degreeTolerance = 40;
         const x = document.getElementById("demo");
 
         function isPlaying(audio) {
@@ -107,7 +110,7 @@
                 personDegree = Math.round(compass);
 
                 if (waypoints.length && pos) {
-                    let good = (Math.abs(calculateBearing(pos, waypoints[0]) - personDegree) < 20);
+                    let good = (Math.abs(calculateBearing(pos, waypoints[0]) - personDegree) < degreeTolerance);
                     document.getElementById("status").innerHTML = good ? "good" : "bad";
                     document.getElementById("status").innerHTML += `<br>${calculateBearing(pos, waypoints[0])} and ${personDegree}`;
 
@@ -199,15 +202,77 @@
                 },
                 function (response, status) {
                     if (status === 'OK') {
-                        directionsRenderer.setDirections(response);
+                        // directionsRenderer.setDirections(response);
                         for (const [key, value] of Object.entries(response["routes"][0]["overview_path"])) {
                             // console.log("{ lat: " + value.lat() + ", lng: " + value.lng() + "}");
                             waypoints.push({ lat: value.lat(), lng: value.lng() });
                         }
+
+                        // const overviewPath = response["routes"][0]["overview_path"];
+
+                        // const routePolyline = new google.maps.Polyline({
+                        //     path: overviewPath,
+                        //     geodesic: true,
+                        //     strokeColor: '#FF0000',
+                        //     strokeOpacity: 1.0,
+                        //     strokeWeight: 4
+                        // });
+
+                        // routePolyline.setMap(map);
+
+                        drawRouteWithMarkers();
+
                     } else {
                         window.alert('Directions request failed due to ' + status);
                     }
                 });
+        }
+
+        function drawRouteWithMarkers() {
+            // Clear existing polyline
+            if (routePolyline) {
+                routePolyline.setMap(null);
+            }
+
+            // Clear existing markers
+            routeMarkers.forEach(marker => marker.setMap(null));
+            routeMarkers = [];
+
+            if (!waypoints || waypoints.length === 0) return;
+
+            // Draw new polyline
+            routePolyline = new google.maps.Polyline({
+                path: waypoints,
+                geodesic: true,
+                strokeColor: '#007bff', // blue path
+                strokeOpacity: 1.0,
+                strokeWeight: 4
+            });
+            routePolyline.setMap(map);
+
+            // Add numbered markers
+            waypoints.forEach((latlng, index) => {
+                const marker = new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                    label: {
+                        text: `${index + 1}`,
+                        color: '#fff',
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                    },
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 10,
+                        fillColor: '#28a745', // green fill
+                        fillOpacity: 1.0,
+                        strokeColor: '#000',
+                        strokeWeight: 1
+                    }
+                });
+
+                routeMarkers.push(marker);
+            });
         }
 
         // Function to calculate the bearing between two coordinates
@@ -235,15 +300,16 @@
 
         // Function to get the next waypoint and direction
         function getNextWaypoint(currentPosition) {
-            for (let i = 0; i < waypoints.length; i++) {
-                if (isAtWaypoint(currentPosition, waypoints[i])) {
+            // for (let i = 0; i < waypoints.length; i++) {
+                if (isAtWaypoint(currentPosition, waypoints[0])) {
                     x.innerHTML += `Reached a waypoint! (were ${waypoints.length})<br>`;
-                    waypoints.splice(i, 1); // Remove the current waypoint from the array
+                    waypoints.splice(0, 1); // Remove the current waypoint from the array
                     x.innerHTML += `Reached a waypoint! (now ${waypoints.length})<br>`;
-                    return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? 'Next waypoint.' : 'You have reached your destination.' };
+                    drawRouteWithMarkers();
+                    return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? true : false };
                 }
-            }
-            return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? 'The current waypoint.' : 'You have reached your destination.' };
+            // }
+            return { nextWaypoint: waypoints[0], direction: waypoints.length > 0 ? true : false };
         }
 
         // Function to manually send the person's location and get directions
@@ -253,7 +319,6 @@
             console.log(`Current Location: Lat ${currentPosition.lat}, Lng ${currentPosition.lng}`);
             console.log(`Next direction: ${result.direction}`);
             console.log(waypoints);
-            x.innerHTML += `Go ${result.direction}<br>`;
             return result.direction;
         }
 
@@ -261,27 +326,34 @@
 
         async function intervalFunction() {
             if (isRunning) return; // prevent duplicate loops
+
+            let result = true;
             isRunning = true;
 
-            alert("call the function");
+            x.innerHTML += "call the function<br>";
 
-            x.innerHTML += `Interval check called (${personDegree} degrees)<br>`;
-            const pos = await updateUserLocation();
+            pos = await updateUserLocation();
+            originMarker.setPosition(pos);
 
-            alert("after the position");
+            x.innerHTML += "after the position<br>";
 
             if (pos) {
-                x.innerHTML += "Retrieved the location<br>";
-                getDirectionsForPerson(pos);
+                result = getDirectionsForPerson(pos);
             } else {
                 alert("Could not get location");
             }
 
-            // Schedule the next execution
-            setTimeout(() => {
-                isRunning = false; // allow next run
-                intervalFunction();
-            }, 5000);
+            if (result) {
+                // isRunning = false; // allow next run
+                // x.innerHTML = "";
+
+                // Schedule the next execution
+                setTimeout(() => {
+                    isRunning = false; // allow next run
+                    x.innerHTML = "";
+                    intervalFunction();
+                }, 5000);
+            }
         }
 
         document.getElementById('person_submit').addEventListener('click', intervalFunction);
