@@ -7,9 +7,6 @@ WORKDIR /app
 # Copy the application code into the container
 COPY app/ /app
 
-# Copy SSL certificates into the container
-COPY app/certs/ /app/certs
-
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
